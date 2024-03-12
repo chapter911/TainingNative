@@ -1,0 +1,39 @@
+###
+GET http://localhost:3000
+
+###
+GET http://localhost:3000/user
+
+###
+POST http://localhost:3000/user
+content-type: application/json
+
+{
+    "userName": "user9",
+    "email"   : "user9@gmail.com",
+    "hashPwd" : "123",
+    "role"    : "users"
+}
+
+###
+POST http://localhost:3000/user/create
+content-type: application/json
+
+{
+    "userName": "user5",
+    "email"   : "user5@gmail.com",
+    "hashPwd" : "123",
+    "role"    : "users"
+}
+
+###
+PATCH http://localhost:3000/user/2
+content-type: application/json
+
+{
+    "userName": "agung",
+    "role"    : "agung"
+}
+
+###
+DELETE http://localhost:3000/user/8

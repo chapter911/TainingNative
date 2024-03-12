@@ -1,9 +1,16 @@
-import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto';
 import { EditUserDto } from './dto/edit-user.dto';
-export declare class UserService {
-    private prisma;
-    constructor(prisma: PrismaService);
+import { UserService } from './user.service';
+export declare class UserController {
+    private userService;
+    constructor(userService: UserService);
+    getUser(): Promise<{
+        id: number;
+        userName: string;
+        email: string;
+        hashPwd: string;
+        role: string;
+    }[]>;
     createUser(dto: CreateUserDto): Promise<{
         id: number;
         userName: string;
@@ -26,11 +33,4 @@ export declare class UserService {
         role: string;
     }>;
     deleteUser(id: number): Promise<void>;
-    getUser(): Promise<{
-        id: number;
-        userName: string;
-        email: string;
-        hashPwd: string;
-        role: string;
-    }[]>;
 }
