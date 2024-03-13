@@ -13,10 +13,16 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
+const jwt_guard_1 = require("../auth/guard/jwt.guard");
 const dto_1 = require("./dto");
 const edit_user_dto_1 = require("./dto/edit-user.dto");
 const user_service_1 = require("./user.service");
 const common_1 = require("@nestjs/common");
+const role_guard_1 = require("../auth/guard/role.guard");
+const role_decorator_1 = require("../auth/role/role.decorator");
+const role_enum_1 = require("../auth/role/role.enum");
+const platform_express_1 = require("@nestjs/platform-express");
+const multer_1 = require("multer");
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
@@ -36,9 +42,19 @@ let UserController = class UserController {
     deleteUser(id) {
         return this.userService.deleteUser(id);
     }
+    uploadFile(file) {
+        const arrBuffer = file.buffer;
+        const byteArray = new Int32Array(arrBuffer);
+        console.log("byteArray: ", byteArray);
+    }
+    async uploadFileToLocal(file) {
+        return { statusCode: 200, data: file.path };
+    }
 };
 exports.UserController = UserController;
 __decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtGuard, role_guard_1.RoleGuard),
+    (0, role_decorator_1.Role)(role_enum_1.Roles.Admins),
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -74,6 +90,39 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "deleteUser", null);
+__decorate([
+    (0, common_1.Post)('upload'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    __param(0, (0, common_1.UploadedFile)(new common_1.ParseFilePipe({
+        validators: [
+            new common_1.MaxFileSizeValidator({ maxSize: 1000000 }),
+            new common_1.FileTypeValidator({ fileType: 'image/jpeg' })
+        ]
+    }))),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "uploadFile", null);
+__decorate([
+    (0, common_1.Post)('uploadlocal'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', {
+        storage: (0, multer_1.diskStorage)({
+            destination: 'public/images',
+            filename: (req, file, cb) => {
+                cb(null, file.originalname);
+            }
+        })
+    })),
+    __param(0, (0, common_1.UploadedFile)(new common_1.ParseFilePipe({
+        validators: [
+            new common_1.MaxFileSizeValidator({ maxSize: 1000000 }),
+            new common_1.FileTypeValidator({ fileType: 'image/jpeg' })
+        ]
+    }))),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "uploadFileToLocal", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)('user'),
     __metadata("design:paramtypes", [user_service_1.UserService])

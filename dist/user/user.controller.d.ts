@@ -1,3 +1,4 @@
+/// <reference types="multer" />
 import { CreateUserDto } from './dto';
 import { EditUserDto } from './dto/edit-user.dto';
 import { UserService } from './user.service';
@@ -33,4 +34,9 @@ export declare class UserController {
         role: string;
     }>;
     deleteUser(id: number): Promise<void>;
+    uploadFile(file: Express.Multer.File): void;
+    uploadFileToLocal(file: Express.Multer.File): Promise<{
+        statusCode: number;
+        data: string;
+    }>;
 }

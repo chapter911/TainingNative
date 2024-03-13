@@ -37,3 +37,20 @@ content-type: application/json
 
 ###
 DELETE http://localhost:3000/user/8
+
+###
+POST http://localhost:3000/auth/login
+content-type: application/json
+
+{
+    "email"   : "user3@gmail.com",
+    "hashPwd" : "123"
+}
+
+### ini karena bukan user rolenya admin tidak bisa akses
+GET http://localhost:3000/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjgsImVtYWlsIjoidXNlcjVAZ21haWwuY29tIiwicm9sZSI6InVzZXJzIiwiaWF0IjoxNzEwMjk5MzkyLCJleHAiOjE3MTA2NDQ5OTJ9.Q9YJeg1Z4pN9AAZvSRdmppYVyv36dg6YfQdPtOew3UY
+
+### ini user rolenya admin
+GET http://localhost:3000/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsImVtYWlsIjoidXNlcjNAZ21haWwuY29tIiwicm9sZSI6ImFkbWlucyIsImlhdCI6MTcxMDMwMjIwMCwiZXhwIjoxNzEwNjQ3ODAwfQ.3fL3B59J--YyKqbyFllTdYTRVSS1MmoaQoHpwJrSbMY

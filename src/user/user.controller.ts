@@ -1,12 +1,21 @@
+import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { CreateUserDto } from './dto';
 import { EditUserDto } from './dto/edit-user.dto';
 import { UserService } from './user.service';
-import { BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpStatus, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { RoleGuard } from 'src/auth/guard/role.guard';
+import { Role } from 'src/auth/role/role.decorator';
+import { Roles } from 'src/auth/role/role.enum';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
+// @UseGuards(JwtGuard) //untuk mengaktifkan token jwt untuk semua method
 @Controller('user')
 export class UserController {
     constructor(private userService: UserService){}
 
+    @UseGuards(JwtGuard, RoleGuard) //untuk mengaktifkan token jwt untuk method spesifik
+    @Role(Roles.Admins)
     @Get()
     getUser(){
         return this.userService.getUser()
@@ -31,5 +40,38 @@ export class UserController {
     @Delete(':id')
     deleteUser(@Param('id', ParseIntPipe) id: number){
         return this.userService.deleteUser(id)
+    }
+
+    @Post('upload')
+    @UseInterceptors(FileInterceptor('file'))
+    uploadFile(@UploadedFile(new ParseFilePipe({
+        validators: [
+            new MaxFileSizeValidator({maxSize: 1000000}), //ini dalam bytes
+            new FileTypeValidator({fileType: 'image/jpeg'}) //ini dalam bytes
+        ]
+    })) file: Express.Multer.File){
+        // console.log(file)
+
+        const arrBuffer = file.buffer
+        const byteArray = new Int32Array(arrBuffer)
+        console.log("byteArray: ", byteArray); //untuk mengubah format tipe agar bisa disimpan ke database filenya
+    }
+
+    @Post('uploadlocal')
+    @UseInterceptors(FileInterceptor('file', {
+        storage: diskStorage({
+            destination: 'public/images',
+            filename: (req, file, cb) => {
+                cb(null, file.originalname)
+            }
+        })
+    }))
+    async uploadFileToLocal(@UploadedFile(new ParseFilePipe({
+        validators: [
+            new MaxFileSizeValidator({maxSize: 1000000}), //ini dalam bytes
+            new FileTypeValidator({fileType: 'image/jpeg'}) //ini dalam bytes
+        ]
+    })) file: Express.Multer.File){
+        return {statusCode: 200, data: file.path}
     }
 }
