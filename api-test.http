@@ -20,8 +20,8 @@ POST http://localhost:3000/user/create
 content-type: application/json
 
 {
-    "userName": "user5",
-    "email"   : "user5@gmail.com",
+    "userName": "test5",
+    "email"   : "test5@gmail.com",
     "hashPwd" : "123",
     "role"    : "users"
 }
