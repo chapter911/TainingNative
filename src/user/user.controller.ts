@@ -1,11 +1,15 @@
-import { JwtGuard } from '../../src/auth/guard/jwt.guard';
+// import { JwtGuard } from '../../src/auth/guard/jwt.guard';
+import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { CreateUserDto } from './dto';
 import { EditUserDto } from './dto/edit-user.dto';
 import { UserService } from './user.service';
 import { Body, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpStatus, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
-import { RoleGuard } from '../../src/auth/guard/role.guard';
-import { Role } from '../../src/auth/role/role.decorator';
-import { Roles } from '../../src/auth/role/role.enum';
+// import { RoleGuard } from '../../src/auth/guard/role.guard';
+import { RoleGuard } from 'src/auth/guard/role.guard';
+// import { Role } from '../../src/auth/role/role.decorator';
+import { Role } from 'src/auth/role/role.decorator';
+// import { Roles } from '../../src/auth/role/role.enum';
+import { Roles } from 'src/auth/role/role.enum';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
@@ -36,6 +40,14 @@ export class UserController {
         return this.userService.editUser(id, dto)
     }
 
+    // @HttpCode(HttpStatus.NO_CONTENT) //kalau mau customize status code
+    // @Delete(':id')
+    // deleteUser(@Param('id', ParseIntPipe) id: number){
+    //     return this.userService.deleteUser(id)
+    // }
+
+    @UseGuards(JwtGuard, RoleGuard) //untuk mengaktifkan token jwt untuk method spesifik
+    @Role(Roles.Admins)
     @HttpCode(HttpStatus.NO_CONTENT) //kalau mau customize status code
     @Delete(':id')
     deleteUser(@Param('id', ParseIntPipe) id: number){

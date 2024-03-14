@@ -20,10 +20,10 @@ POST http://localhost:3000/user/create
 content-type: application/json
 
 {
-    "userName": "test5",
-    "email"   : "test5@gmail.com",
+    "userName": "guest",
+    "email"   : "guest@gmail.com",
     "hashPwd" : "123",
-    "role"    : "users"
+    "role"    : "guest"
 }
 
 ###
@@ -43,14 +43,14 @@ POST http://localhost:3000/auth/login
 content-type: application/json
 
 {
-    "email"   : "user3@gmail.com",
+    "email"   : "guest@gmail.com",
     "hashPwd" : "123"
 }
 
-### ini karena bukan user rolenya admin tidak bisa akses
+### ini karena bukan user rolenya admin / user tidak bisa akses
 GET http://localhost:3000/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjgsImVtYWlsIjoidXNlcjVAZ21haWwuY29tIiwicm9sZSI6InVzZXJzIiwiaWF0IjoxNzEwMjk5MzkyLCJleHAiOjE3MTA2NDQ5OTJ9.Q9YJeg1Z4pN9AAZvSRdmppYVyv36dg6YfQdPtOew3UY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQ0LCJlbWFpbCI6Imd1ZXN0QGdtYWlsLmNvbSIsInJvbGUiOiJndWVzdCIsImlhdCI6MTcxMDM4MzgzMCwiZXhwIjoxNzEwNzI5NDMwfQ.LFE8gCJKuEzcT49-LxKIrVddcid9s6usYvAhXC8abrc
 
 ### ini user rolenya admin
 GET http://localhost:3000/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsImVtYWlsIjoidXNlcjNAZ21haWwuY29tIiwicm9sZSI6ImFkbWlucyIsImlhdCI6MTcxMDMwMjIwMCwiZXhwIjoxNzEwNjQ3ODAwfQ.3fL3B59J--YyKqbyFllTdYTRVSS1MmoaQoHpwJrSbMY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQyLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxMDM4Mzc5MywiZXhwIjoxNzEwNzI5MzkzfQ.uY1qxZgJlVeR6-wnICGxIW1mKnwRT4twtJ7FRYBEQXA

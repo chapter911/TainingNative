@@ -5,11 +5,13 @@ import { AppModule } from '../src/app.module';
 import * as pactum from 'pactum'
 import { CreateUserDto } from "src/user/dto";
 import { EditUserDto } from "src/user/dto/edit-user.dto";
+import { LoginDto } from "src/auth/dto/login.dto";
 
 describe('App e2e', () => {
   let app: INestApplication
   let prisma: PrismaService
-  let userId;
+  let userId: number;
+  let token: string;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -22,20 +24,12 @@ describe('App e2e', () => {
     await app.listen(3131)
 
     prisma = app.get(PrismaService)
+    await prisma.deleteDbData()
     pactum.request.setBaseUrl('http://localhost:3131')
   })
 
   afterAll(async () => {
     await app.close()
-  })
-
-  describe('Get All Users', () => {
-    it('should get all user', () => {
-      return pactum
-      .spec()
-      .get('/user')
-      .expectStatus(200)
-    })
   })
 
   describe('Create User', () => {
@@ -60,7 +54,7 @@ describe('App e2e', () => {
     // const userid = parseInt('$S{userid}')
     const dto: EditUserDto = {
       userName: "test",
-      role: "edited"
+      role: "admins"
     }
     it('should create edit an user', () => {
       return pactum
@@ -72,12 +66,43 @@ describe('App e2e', () => {
     })
   })
 
-  describe('Delete User', () => {
-    it('should delete an user', () => {
+  describe('Get All Users', () => {
+    it('should get all user', async () => {
+      return await pactum
+      .spec()
+      .get('/user')
+      .expectStatus(200)
+    })
+  })
+
+  describe('Authentication', () => {
+    describe('Login', () => {
+      it('shound login and return token', async () => {
+        const dto: LoginDto = {
+          email: 'test@gmail.com',
+          hashPwd: '123'
+        }
+
+        const response = await pactum
+          .spec()
+          .post('/auth/login')
+          .withBody(dto)
+          .expectStatus(200);
+
+          token = response.body.access_token;
+      })
+    })
+  })
+
+  describe('Delete User With Token', () => {
+    it('should delete an user with token', () => {
       return pactum
       .spec()
       .delete('/user/{id}')
       .withPathParams('id', userId)
+      .withHeaders({
+        Authorization: `Bearer ${token}`
+      })
       .expectStatus(204)
     })
   })

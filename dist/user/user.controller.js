@@ -13,10 +13,14 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
+const jwt_guard_1 = require("../auth/guard/jwt.guard");
 const dto_1 = require("./dto");
 const edit_user_dto_1 = require("./dto/edit-user.dto");
 const user_service_1 = require("./user.service");
 const common_1 = require("@nestjs/common");
+const role_guard_1 = require("../auth/guard/role.guard");
+const role_decorator_1 = require("../auth/role/role.decorator");
+const role_enum_1 = require("../auth/role/role.enum");
 const platform_express_1 = require("@nestjs/platform-express");
 const multer_1 = require("multer");
 let UserController = class UserController {
@@ -77,6 +81,8 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "editUser", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtGuard, role_guard_1.RoleGuard),
+    (0, role_decorator_1.Role)(role_enum_1.Roles.Admins),
     (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
