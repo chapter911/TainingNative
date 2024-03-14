@@ -58,6 +58,17 @@ let UserService = class UserService {
             throw new common_1.BadRequestException(`terjadi error: ${error}`);
         }
     }
+    async userById(id) {
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: { id: id }
+            });
+            return user;
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(`terjadi error: ${error}`);
+        }
+    }
     async deleteUser(id) {
         try {
             const user = await this.prisma.user.delete({

@@ -25,6 +25,11 @@ export class UserController {
         return this.userService.getUser()
     }
 
+    @Get(':id')
+    getUserById(@Param('id', ParseIntPipe) id: number){
+        return this.userService.userById(id)
+    }
+
     @Post()
     createUser(@Body() dto: CreateUserDto){
         return this.userService.createUser(dto)

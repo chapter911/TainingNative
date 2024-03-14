@@ -12,6 +12,13 @@ export declare class UserController {
         hashPwd: string;
         role: string;
     }[]>;
+    getUserById(id: number): Promise<{
+        id: number;
+        userName: string;
+        email: string;
+        hashPwd: string;
+        role: string;
+    }>;
     createUser(dto: CreateUserDto): Promise<{
         id: number;
         userName: string;

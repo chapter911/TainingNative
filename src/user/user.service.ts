@@ -53,6 +53,17 @@ export class UserService {
         }
     }
 
+    async userById(id: number){
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: {id: id}
+            });
+            return user
+        } catch (error) {
+            throw new BadRequestException(`terjadi error: ${error}`)
+        }
+    }
+
     async deleteUser(id: number){
         try {
             const user = await this.prisma.user.delete({

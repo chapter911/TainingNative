@@ -25,6 +25,13 @@ export declare class UserService {
         hashPwd: string;
         role: string;
     }>;
+    userById(id: number): Promise<{
+        id: number;
+        userName: string;
+        email: string;
+        hashPwd: string;
+        role: string;
+    }>;
     deleteUser(id: number): Promise<void>;
     getUser(): Promise<{
         id: number;

@@ -30,6 +30,9 @@ let UserController = class UserController {
     getUser() {
         return this.userService.getUser();
     }
+    getUserById(id) {
+        return this.userService.userById(id);
+    }
     createUser(dto) {
         return this.userService.createUser(dto);
     }
@@ -58,6 +61,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "getUser", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "getUserById", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
