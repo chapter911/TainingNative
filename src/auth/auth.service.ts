@@ -14,9 +14,11 @@ export class AuthService{
         private config: ConfigService
     ) {}
 
-    async createToken(userId: number, email: string, role: string){
+    async createToken(userId: number, email: string, role: string, user: any){
         const payload = {
-            sub: userId, email, role
+            sub: userId,
+            email: user.email,
+            role: user.role,
         }
 
         const jwtSercret = this.config.get('JWT_SECRET')
@@ -26,7 +28,8 @@ export class AuthService{
         })
 
         return {
-            access_token: token
+            access_token: token,
+            user: user
         }
     }
 
@@ -47,6 +50,6 @@ export class AuthService{
             throw new ForbiddenException("Incorrect email or password")
         }
 
-        return this.createToken(user.id, user.email, user.role)
+        return this.createToken(user.id, user.email, user.role, user)
     }
 }

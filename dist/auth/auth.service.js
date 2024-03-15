@@ -21,9 +21,11 @@ let AuthService = class AuthService {
         this.jwt = jwt;
         this.config = config;
     }
-    async createToken(userId, email, role) {
+    async createToken(userId, email, role, user) {
         const payload = {
-            sub: userId, email, role
+            sub: userId,
+            email: user.email,
+            role: user.role,
         };
         const jwtSercret = this.config.get('JWT_SECRET');
         const token = await this.jwt.signAsync(payload, {
@@ -31,7 +33,8 @@ let AuthService = class AuthService {
             secret: jwtSercret
         });
         return {
-            access_token: token
+            access_token: token,
+            user: user
         };
     }
     async login(dto) {
@@ -47,7 +50,7 @@ let AuthService = class AuthService {
         if (!pwdMatches) {
             throw new common_1.ForbiddenException("Incorrect email or password");
         }
-        return this.createToken(user.id, user.email, user.role);
+        return this.createToken(user.id, user.email, user.role, user);
     }
 };
 exports.AuthService = AuthService;
